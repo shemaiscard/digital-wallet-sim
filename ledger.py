@@ -1,25 +1,32 @@
 import streamlit as st
 import hashlib
+import json
 import firebase_admin
 from firebase_admin import credentials, firestore
 from crypto_utils import verify_signature
 
 # Initialize Firebase exactly once per application lifespan
 if not firebase_admin._apps:
-    if 'firebase' in st.secrets:
-        # Load credentials dynamically from Streamlit Community Cloud Secrets
-        cred_dict = dict(st.secrets['firebase'])
-        
-        # Streamlit TOML parsing sometimes escapes newlines in the private key
-        if "private_key" in cred_dict:
-            cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+    try:
+        # Safest method: parsing raw JSON string from Streamlit secrets
+        if 'FIREBASE_KEY' in st.secrets:
+            key_dict = json.loads(st.secrets['FIREBASE_KEY'])
+            cred = credentials.Certificate(key_dict)
+        elif 'firebase' in st.secrets:
+            # Fallback legacy TOML method
+            cred_dict = dict(st.secrets['firebase'])
+            if "private_key" in cred_dict:
+                cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+            cred = credentials.Certificate(cred_dict)
+        else:
+            # Fallback to local development key
+            cred = credentials.Certificate('firebase_key.json')
             
-        cred = credentials.Certificate(cred_dict)
-    else:
-        # Fallback to local development key
-        cred = credentials.Certificate('firebase_key.json')
-        
-    firebase_admin.initialize_app(cred)
+        firebase_admin.initialize_app(cred)
+    except Exception as e:
+        st.error(f"Error initializing Firebase: {e}")
+        st.stop()
+
 db = firestore.client()
 
 def init_ledger():
