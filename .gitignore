@@ -1,0 +1,6 @@
+firebase_key.json
+wallets.json
+ledger.json
+.venv/
+__pycache__/
+.DS_Store

@@ -1,0 +1,99 @@
+/* style.css - Dark mode glassmorphism UI */
+
+/* Define variables */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --text-primary: #ffffff;
+    --text-secondary: #a0aab2;
+    --accent: #4f8aff;
+    --accent-hover: #3b6bcc;
+    --accent-glow: rgba(79, 138, 255, 0.4);
+    --success: #00e676;
+    --danger: #ff5252;
+}
+
+/* Glassmorphism Card styling */
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--glass-border);
+    border-radius: 16px;
+    padding: 24px;
+    margin: 16px 0;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    color: var(--text-primary);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px 0 var(--accent-glow);
+}
+
+.balance-title {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.balance-amount {
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #fff 0%, #a0aab2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.currency-label {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: var(--accent);
+    -webkit-background-clip: initial;
+    -webkit-text-fill-color: initial;
+}
+
+/* Enhancing Streamlit defaults */
+.stButton > button {
+    background: linear-gradient(135deg, var(--accent) 0%, #2a52be 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+    box-shadow: 0 4px 15px 0 var(--accent-glow);
+}
+
+.stButton > button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px 0 var(--accent-glow);
+    background: linear-gradient(135deg, var(--accent-hover) 0%, #1e3c8c 100%);
+    border: none;
+    color: white;
+}
+
+/* Fix sidebar text color if needed */
+[data-testid="stSidebar"] {
+    background-color: #11151c;
+}
+
+/* Input fields styling */
+.stTextInput > div > div > input, .stNumberInput > div > div > input {
+    background-color: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    color: white;
+    border-radius: 8px;
+}
+
+.stTextInput > div > div > input:focus, .stNumberInput > div > div > input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 1px var(--accent);
+}
