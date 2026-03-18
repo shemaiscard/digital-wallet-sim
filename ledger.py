@@ -9,6 +9,11 @@ if not firebase_admin._apps:
     if 'firebase' in st.secrets:
         # Load credentials dynamically from Streamlit Community Cloud Secrets
         cred_dict = dict(st.secrets['firebase'])
+        
+        # Streamlit TOML parsing sometimes escapes newlines in the private key
+        if "private_key" in cred_dict:
+            cred_dict["private_key"] = cred_dict["private_key"].replace("\\n", "\n")
+            
         cred = credentials.Certificate(cred_dict)
     else:
         # Fallback to local development key
