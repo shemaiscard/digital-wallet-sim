@@ -1,13 +1,43 @@
 import streamlit as st
 import hashlib
+import json # Added import for json
 import firebase_admin
 from firebase_admin import credentials, firestore
 from crypto_utils import verify_signature
 
 # Initialize Firebase exactly once per application lifespan
 if not firebase_admin._apps:
-    cred = credentials.Certificate('firebase_key.json')
-    firebase_admin.initialize_app(cred)
+    try:
+        import tempfile
+        
+        if 'FIREBASE_KEY' in st.secrets:
+            # Handle Raw JSON string (or accidentally parsed dict)
+            raw_content = st.secrets['FIREBASE_KEY']
+            if type(raw_content) is dict or "AttrDict" in str(type(raw_content)):
+                 raw_content = json.dumps(dict(raw_content))
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp:
+                temp.write(str(raw_content))
+                temp_path = temp.name
+            cred = credentials.Certificate(temp_path)
+            
+        elif 'firebase' in st.secrets:
+            # Handle standard Streamlit TOML Dictionary
+            cred_dict = dict(st.secrets['firebase'])
+            if 'private_key' in cred_dict:
+                cred_dict['private_key'] = cred_dict['private_key'].replace('\\n', '\n')
+            
+            with tempfile.NamedTemporaryFile(mode='w', suffix='.json', delete=False) as temp:
+                json.dump(cred_dict, temp)
+                temp_path = temp.name
+            cred = credentials.Certificate(temp_path)
+            
+        else:
+            cred = credentials.Certificate('firebase_key.json')
+            
+        firebase_admin.initialize_app(cred)
+    except Exception as e:
+        st.error(f"Error initializing Firebase: {e}")
+        st.stop()
 db = firestore.client()
 
 def init_ledger():
