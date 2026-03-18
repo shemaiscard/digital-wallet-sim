@@ -11,6 +11,9 @@ if not firebase_admin._apps:
         # Safest method: parsing raw JSON string from Streamlit secrets
         if 'FIREBASE_KEY' in st.secrets:
             key_dict = json.loads(st.secrets['FIREBASE_KEY'])
+            if 'private_key' in key_dict:
+                # Force replace any literal escaped newlines that survived parsing
+                key_dict['private_key'] = key_dict['private_key'].replace('\\n', '\n')
             cred = credentials.Certificate(key_dict)
         elif 'firebase' in st.secrets:
             # Fallback legacy TOML method
