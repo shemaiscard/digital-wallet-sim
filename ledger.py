@@ -4,18 +4,15 @@ import firebase_admin
 from firebase_admin import credentials, firestore
 from crypto_utils import verify_signature
 
-import os
-
 # Initialize Firebase exactly once per application lifespan
 if not firebase_admin._apps:
-    if os.path.exists('firebase_key.json'):
-        # Local development uses the physical file
-        cred = credentials.Certificate('firebase_key.json')
+    if 'firebase' in st.secrets:
+        # Load credentials dynamically from Streamlit Community Cloud Secrets
+        cred_dict = dict(st.secrets['firebase'])
+        cred = credentials.Certificate(cred_dict)
     else:
-        # Streamlit Cloud deployment uses secrets
-        import json
-        key_dict = json.loads(st.secrets["textkey"])
-        cred = credentials.Certificate(key_dict)
+        # Fallback to local development key
+        cred = credentials.Certificate('firebase_key.json')
         
     firebase_admin.initialize_app(cred)
 db = firestore.client()
