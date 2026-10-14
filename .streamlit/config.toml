@@ -1,0 +1,4 @@
+# The custom CSS is designed for dark mode, so use the dark theme for every visitor
+# instead of following their system setting.
+[theme]
+base = "dark"

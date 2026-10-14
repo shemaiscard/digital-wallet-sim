@@ -36,6 +36,13 @@ if st.session_state.theme == "Light":
     .stTextInput > div > div > input:focus, .stNumberInput > div > div > input:focus { border-color: #1e3c8c; box-shadow: 0 0 0 1px #1e3c8c; }
     .stButton > button { box-shadow: 0 4px 15px 0 rgba(0,0,0,0.1); }
     [data-testid="stSidebar"] { background-color: #f8f9fa; color: #000; }
+    /* Streamlit itself runs on its dark theme (.streamlit/config.toml), so repaint the page, text and widgets too */
+    .stApp, [data-testid="stHeader"] { background-color: #fff; }
+    .stApp h1, .stApp h2, .stApp h3, .stApp p, .stApp li, .stApp label, [data-testid="stHeader"] button { color: #111; }
+    .stApp [data-testid="stCaptionContainer"] { color: #555; }
+    .stApp .stButton > button p { color: #fff; }
+    .stTextInput [data-baseweb="input"], .stNumberInput [data-baseweb="input"], .stDateInput [data-baseweb="input"], .stDateInput input, .stSelectbox [data-baseweb="select"] > div { background-color: #fff; color: #000; border-color: #ccc; }
+    .stNumberInput button { background-color: #f1f3f6; color: #111; }
     </style>
     """, unsafe_allow_html=True)
 
