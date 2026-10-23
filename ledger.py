@@ -237,6 +237,8 @@ def verify_chain(chain, difficulty=DIFFICULTY):
             return False, f"block {i}: hash or proof of work does not match"
         if tx["from"] == "Mint":
             mints[tx["to"]] = mints.get(tx["to"], 0) + 1
+            if tx["amount"] != MINT_AMOUNT or tx["fee"] != 0:
+                return False, f"block {i}: mint amount altered"
             if mints[tx["to"]] > MINT_LIMIT:
                 return False, f"block {i}: mint limit exceeded"
         else:
